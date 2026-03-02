@@ -1,0 +1,14 @@
+Django==4.2.13
+djangorestframework
+mysqlclient
+pymysql
+fastapi
+uvicorn
+sqlalchemy
+python-jose
+passlib[bcrypt]
+python-multipart
+pydantic[email]
+celery
+redis
+passlib
