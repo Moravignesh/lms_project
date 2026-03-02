@@ -1,0 +1,170 @@
+{
+  "info": {
+    "name": "LMS API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/register/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alice\",\n  \"email\": \"alice@example.com\",\n  \"role\": \"student\",\n  \"password\": \"secret\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/login/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"secret\"\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Courses (requires token)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/courses/"
+      }
+    },
+    {
+      "name": "Course Detail",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/courses/1"
+      }
+    },
+    {
+      "name": "Enroll",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/enroll/",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"course_id\": 1 }"
+        }
+      }
+    },
+    {
+      "name": "My Courses",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/my-courses/"
+      }
+    },
+    {
+      "name": "Update Progress",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/progress/update/",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"enrollment_id\": 1, \"completed_lessons\": 3, \"progress_percent\": 50.0 }"
+        }
+      }
+    },
+    {
+      "name": "View Progress",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/progress/view/"
+      }
+    },
+    {
+      "name": "Plans",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/plans/"
+      }
+    },
+    {
+      "name": "Subscribe",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/subscribe/",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"plan_id\": 1 }"
+        }
+      }
+    },
+    {
+      "name": "Payments",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/payments/"
+      }
+    },
+    {
+      "name": "Notifications",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/notifications/"
+      }
+    },
+    {
+      "name": "Mark Notification Read",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/notifications/mark-read/?notification_id=1"
+      }
+    },
+    {
+      "name": "Log Activity",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/activity/?action_type=test&action_detail=clicked"
+      }
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8002" },
+    { "key": "token", "value": "" }
+  ]
+}
