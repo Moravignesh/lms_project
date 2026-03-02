@@ -20,7 +20,7 @@
 - Login at /admin and manage users, courses, lessons, enrollments, progress
 
 ## Environment
-- DATABASE_URL: mysql://root:vignesh@db:3306/lms_project
+- DATABASE_URL: mysql://root:---@db:3306/lms_project
 - JWT_SECRET: set on API service
 
 ## Database Schema
