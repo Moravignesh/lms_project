@@ -143,6 +143,52 @@
         }
       }
     }
+    ,
+    {
+      "name": "Auth - Google Callback",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/auth/google/callback", "host": ["{{baseUrl}}"], "path": ["auth", "google", "callback"] },
+        "body": { "mode": "raw", "raw": "{ \"id_token\": \"<GOOGLE_ID_TOKEN>\" }" }
+      }
+    },
+    {
+      "name": "Auth - Facebook Callback",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/auth/facebook/callback", "host": ["{{baseUrl}}"], "path": ["auth", "facebook", "callback"] },
+        "body": { "mode": "raw", "raw": "{ \"access_token\": \"<FACEBOOK_ACCESS_TOKEN>\" }" }
+      }
+    },
+    {
+      "name": "Auth - GitHub Callback",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/auth/github/callback", "host": ["{{baseUrl}}"], "path": ["auth", "github", "callback"] },
+        "body": { "mode": "raw", "raw": "{ \"access_token\": \"<GITHUB_ACCESS_TOKEN>\" }" }
+      }
+    },
+    {
+      "name": "Auth - OTP Send",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/auth/otp/send", "host": ["{{baseUrl}}"], "path": ["auth", "otp", "send"] },
+        "body": { "mode": "raw", "raw": "{ \"email\": \"test@example.com\", \"purpose\": \"login\" }" }
+      }
+    },
+    {
+      "name": "Auth - OTP Verify",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/auth/otp/verify", "host": ["{{baseUrl}}"], "path": ["auth", "otp", "verify"] },
+        "body": { "mode": "raw", "raw": "{ \"email\": \"test@example.com\", \"code\": \"123456\", \"purpose\": \"login\", \"name\": \"Test User\" }" }
+      }
+    }
   ],
   "event": [],
   "variable": [

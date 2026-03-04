@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Course, Lesson, Enrollment, Progress, Plan, Subscription, Payment, CourseMeta, Notification, ActivityLog, ChatRoom, ChatMessage, UserStatus
+from .models import UserProfile, Course, Lesson, Enrollment, Progress, Plan, Subscription, Payment, CourseMeta, Notification, ActivityLog, ChatRoom, ChatMessage, UserStatus, SocialAccount, OTPLog
 
 
 @admin.register(UserProfile)
@@ -91,3 +91,17 @@ class ChatMessageAdmin(admin.ModelAdmin):
 class UserStatusAdmin(admin.ModelAdmin):
     list_display = ('user', 'is_online', 'last_seen')
     list_filter = ('is_online',)
+
+
+@admin.register(SocialAccount)
+class SocialAccountAdmin(admin.ModelAdmin):
+    list_display = ('user', 'provider', 'provider_user_id', 'created_at')
+    list_filter = ('provider',)
+    search_fields = ('user__name', 'provider_user_id')
+
+
+@admin.register(OTPLog)
+class OTPLogAdmin(admin.ModelAdmin):
+    list_display = ('email', 'purpose', 'code', 'is_used', 'created_at', 'expires_at')
+    list_filter = ('purpose', 'is_used')
+    search_fields = ('email', 'code')

@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 from .database import Base, engine
-from .routes import users, courses, enrollments, progress, plans, subscriptions, payments, notifications, activity, chat, attendance, assignments
+from .routes import users, courses, enrollments, progress, plans, subscriptions, payments, notifications, activity, chat, attendance, assignments, auth_google, auth_facebook, auth_github, auth_otp
 
 try:
     if engine.url.get_backend_name() == "sqlite":
@@ -27,6 +27,10 @@ app.include_router(activity.router, tags=["Activity Logs"])
 app.include_router(chat.router, tags=["Real-Time Chat"])
 app.include_router(attendance.router, tags=["Attendance"])
 app.include_router(assignments.router, tags=["Assignments"])
+app.include_router(auth_google.router, tags=["Auth Google"])
+app.include_router(auth_facebook.router, tags=["Auth Facebook"])
+app.include_router(auth_github.router, tags=["Auth GitHub"])
+app.include_router(auth_otp.router, tags=["Auth OTP"])
 
 
 if __name__ == "__main__":

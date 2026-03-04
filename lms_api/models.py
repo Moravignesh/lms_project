@@ -214,3 +214,25 @@ class Submission(Base):
 
     assignment = relationship("Assignment")
     student = relationship("UserProfile")
+
+
+class SocialAccount(Base):
+    __tablename__ = "social_accounts"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    provider = Column(String(50), nullable=False)
+    provider_user_id = Column(String(200), nullable=False)
+    created_at = Column(DateTime, nullable=False)
+
+    user = relationship("UserProfile")
+
+
+class OTPLog(Base):
+    __tablename__ = "otp_logs"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), nullable=False)
+    code = Column(String(10), nullable=False)
+    purpose = Column(String(20), nullable=False)
+    is_used = Column(Boolean, default=False)
+    created_at = Column(DateTime, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
