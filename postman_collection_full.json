@@ -1,0 +1,209 @@
+{
+  "info": {
+    "name": "LMS Full API Collection",
+    "_postman_id": "c8b2c7a1-7f1f-4f28-9a6a-lms-full",
+    "description": "Covers LMS Admin(FastAPI user panel) and Analytics(Django) with tests to display responses",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8002" },
+    { "key": "adminUrl", "value": "http://localhost:8001" },
+    { "key": "token", "value": "" },
+    { "key": "course_id", "value": "10" },
+    { "key": "student_id", "value": "3" },
+    { "key": "assignment_id", "value": "1" },
+    { "key": "submission_id", "value": "1" }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "console.log('Status:', pm.response.code);",
+          "console.log('URL:', pm.request.url.toString());",
+          "try {",
+          "  const txt = pm.response.text();",
+          "  console.log('Response:', txt);",
+          "} catch(e) {",
+          "  console.log('Response parse error:', e);",
+          "}"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/register/", "host": ["{{baseUrl}}"], "path": ["register", ""] },
+        "body": { "mode": "raw", "raw": "{ \"name\": \"Test User\", \"email\": \"test@example.com\", \"role\": \"student\", \"password\": \"Pass123!\" }" }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/login/", "host": ["{{baseUrl}}"], "path": ["login", ""] },
+        "body": { "mode": "raw", "raw": "{ \"email\": \"test@example.com\", \"password\": \"Pass123!\" }" }
+      }
+    },
+    {
+      "name": "Auth - Token (OAuth2)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+        "url": { "raw": "{{baseUrl}}/token", "host": ["{{baseUrl}}"], "path": ["token"] },
+        "body": { "mode": "urlencoded", "urlencoded": [
+          { "key": "username", "value": "test@example.com" },
+          { "key": "password", "value": "Pass123!" }
+        ] }
+      }
+    },
+    {
+      "name": "Courses - List",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/courses/", "host": ["{{baseUrl}}"], "path": ["courses", ""] }
+      }
+    },
+    {
+      "name": "Courses - Detail",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/courses/{{course_id}}", "host": ["{{baseUrl}}"], "path": ["courses", "{{course_id}}"] }
+      }
+    },
+    {
+      "name": "Courses - Instructor Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/instructor/courses/", "host": ["{{baseUrl}}"], "path": ["instructor", "courses", ""] },
+        "body": { "mode": "raw", "raw": "{ \"title\": \"New Course\", \"description\": \"Intro\", \"status\": \"published\" }" }
+      }
+    },
+    {
+      "name": "Enroll - Enroll In Course",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/enroll/", "host": ["{{baseUrl}}"], "path": ["enroll", ""] },
+        "body": { "mode": "raw", "raw": "{ \"course_id\": {{course_id}} }" }
+      }
+    },
+    {
+      "name": "Enroll - My Courses",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/my-courses/", "host": ["{{baseUrl}}"], "path": ["my-courses", ""] }
+      }
+    },
+    {
+      "name": "Attendance - Mark",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/attendance/mark", "host": ["{{baseUrl}}"], "path": ["attendance", "mark"] },
+        "body": { "mode": "raw", "raw": "{ \"course_id\": {{course_id}}, \"date\": \"2025-10-30\", \"records\": [ {\"student_id\": {{student_id}}, \"status\": \"Present\"} ] }" }
+      }
+    },
+    {
+      "name": "Attendance - Student",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/attendance/student/{{student_id}}?course_id={{course_id}}", "host": ["{{baseUrl}}"], "path": ["attendance", "student", "{{student_id}}"], "query": [{ "key": "course_id", "value": "{{course_id}}" }] }
+      }
+    },
+    {
+      "name": "Attendance - Course",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/attendance/course/{{course_id}}?from=2025-10-01&to=2025-10-31", "host": ["{{baseUrl}}"], "path": ["attendance", "course", "{{course_id}}"], "query": [{ "key": "from", "value": "2025-10-01" }, { "key": "to", "value": "2025-10-31" }] }
+      }
+    },
+    {
+      "name": "Assignments - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/assignments/create", "host": ["{{baseUrl}}"], "path": ["assignments", "create"] },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "course_id", "value": "{{course_id}}", "type": "text" },
+            { "key": "title", "value": "Project 1", "type": "text" },
+            { "key": "description", "value": "Build a microservice", "type": "text" },
+            { "key": "deadline", "value": "2025-11-01", "type": "text" },
+            { "key": "file", "type": "file", "src": "" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Assignments - Submit",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/assignments/submit", "host": ["{{baseUrl}}"], "path": ["assignments", "submit"] },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "assignment_id", "value": "{{assignment_id}}", "type": "text" },
+            { "key": "student_id", "value": "{{student_id}}", "type": "text" },
+            { "key": "file", "type": "file", "src": "" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Assignments - Grade",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/assignments/grade", "host": ["{{baseUrl}}"], "path": ["assignments", "grade"] },
+        "body": { "mode": "raw", "raw": "{ \"submission_id\": {{submission_id}}, \"grade\": 92.5, \"remarks\": \"Well done\" }" }
+      }
+    },
+    {
+      "name": "Notifications - List",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/notifications/", "host": ["{{baseUrl}}"], "path": ["notifications", ""] }
+      }
+    },
+    {
+      "name": "Notifications - Mark Read",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/notifications/mark-read/", "host": ["{{baseUrl}}"], "path": ["notifications", "mark-read", ""] },
+        "body": { "mode": "raw", "raw": "{ \"notification_id\": 1 }" }
+      }
+    },
+    {
+      "name": "Notifications - List For User",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/notifications/{{student_id}}/", "host": ["{{baseUrl}}"], "path": ["notifications", "{{student_id}}", ""] }
+      }
+    },
+    {
+      "name": "Analytics - Dashboard JSON",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{adminUrl}}/analytics/dashboard/?course_id={{course_id}}", "host": ["{{adminUrl}}"], "path": ["analytics", "dashboard", ""], "query": [{ "key": "course_id", "value": "{{course_id}}" }] }
+      }
+    }
+  ]
+}

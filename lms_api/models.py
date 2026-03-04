@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Float, UniqueConstraint, Boolean, Numeric, Table
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, Float, UniqueConstraint, Boolean, Numeric, Table, Date
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -172,3 +172,45 @@ class UserStatus(Base):
     last_seen = Column(DateTime, nullable=False)
 
     user = relationship("UserProfile", backref="status")
+
+
+class Attendance(Base):
+    __tablename__ = "attendance"
+    __table_args__ = (UniqueConstraint("student_id", "course_id", "date", name="uq_attendance_unique"),)
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+    date = Column(Date, nullable=False)
+    status = Column(String(20), nullable=False)
+
+    student = relationship("UserProfile")
+    course = relationship("Course")
+
+
+class Assignment(Base):
+    __tablename__ = "assignments"
+    id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+    title = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+    deadline = Column(DateTime, nullable=False)
+    file_url = Column(String(500), nullable=True)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    course = relationship("Course")
+    creator = relationship("UserProfile")
+
+
+class Submission(Base):
+    __tablename__ = "submissions"
+    __table_args__ = (UniqueConstraint("assignment_id", "student_id", name="uq_submission_unique"),)
+    id = Column(Integer, primary_key=True, index=True)
+    assignment_id = Column(Integer, ForeignKey("assignments.id"), nullable=False)
+    student_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    file_url = Column(String(500), nullable=False)
+    submitted_at = Column(DateTime, nullable=False)
+    grade = Column(Float, nullable=True)
+    remarks = Column(Text, nullable=True)
+
+    assignment = relationship("Assignment")
+    student = relationship("UserProfile")

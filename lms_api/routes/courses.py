@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 from ..schemas import CourseOut, CourseCreate
 from ..models import Course, UserProfile, Subscription, CourseMeta
@@ -9,20 +10,26 @@ router = APIRouter()
 
 @router.get("/courses/", response_model=list[CourseOut])
 def list_courses(user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
-    active = (
-        db.query(Subscription)
-        .filter(Subscription.user_id == user.id, Subscription.status == "active", Subscription.end_date >= db.bind.execute("SELECT NOW()").scalar())
-        .first()
-    )
+    active = db.query(Subscription).filter(
+        Subscription.user_id == user.id,
+        Subscription.status == "active",
+        Subscription.end_date >= func.now(),
+    ).first()
     q = db.query(Course).filter(Course.status == "published")
     if not active:
-        q = q.join(CourseMeta, CourseMeta.course_id == Course.id).filter(CourseMeta.is_premium == False)
+        q = (
+            q.outerjoin(CourseMeta, CourseMeta.course_id == Course.id)
+            .filter(or_(CourseMeta.is_premium == False, CourseMeta.id == None))
+        )
     return q.all()
 
 
 @router.get("/courses/{course_id}", response_model=CourseOut)
 def course_detail(course_id: int, db: Session = Depends(get_db)):
-    return db.query(Course).filter(Course.id == course_id).first()
+    course = db.query(Course).filter(Course.id == course_id).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+    return course
 
 
 @router.post("/instructor/courses/", response_model=CourseOut)

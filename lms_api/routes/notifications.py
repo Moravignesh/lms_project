@@ -20,3 +20,10 @@ def mark_read(notification_id: int, user: UserProfile = Depends(get_current_user
     notif.is_read = True
     db.commit()
     return {"status": "ok"}
+
+
+@router.get("/notifications/{user_id}/")
+def list_user_notifications(user_id: int, user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
+    if user.role != "instructor" and user.id != user_id:
+        raise HTTPException(status_code=403, detail="Not permitted")
+    return db.query(Notification).filter(Notification.user_id == user_id).order_by(Notification.created_at.desc()).all()

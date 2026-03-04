@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from ..schemas import EnrollmentRequest, CourseOut
 from ..models import Enrollment, Progress, Course, UserProfile, ActivityLog, Notification
@@ -12,7 +13,7 @@ def enroll(payload: EnrollmentRequest, user: UserProfile = Depends(get_current_u
     existing = db.query(Enrollment).filter(Enrollment.user_id == user.id, Enrollment.course_id == payload.course_id).first()
     if existing:
         raise HTTPException(status_code=400, detail="Already enrolled")
-    enrollment = Enrollment(user_id=user.id, course_id=payload.course_id, enrolled_on=db.bind.execute("SELECT NOW()").scalar())
+    enrollment = Enrollment(user_id=user.id, course_id=payload.course_id, enrolled_on=func.now())
     db.add(enrollment)
     db.commit()
     db.refresh(enrollment)

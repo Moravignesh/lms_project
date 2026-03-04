@@ -1,0 +1,22 @@
+[
+  {
+    "model": "core.userprofile",
+    "pk": 1,
+    "fields": { "name": "Alice Instructor", "email": "alice@example.com", "role": "instructor", "password_hash": "hashed" }
+  },
+  {
+    "model": "core.userprofile",
+    "pk": 3,
+    "fields": { "name": "Bob Student", "email": "bob@example.com", "role": "student", "password_hash": "hashed" }
+  },
+  {
+    "model": "core.course",
+    "pk": 10,
+    "fields": { "title": "Backend Engineering", "description": "Advanced backend course", "instructor": 1, "status": "published" }
+  },
+  {
+    "model": "core.enrollment",
+    "pk": 100,
+    "fields": { "user": 3, "course": 10, "enrolled_on": "2025-10-01T00:00:00Z" }
+  }
+]

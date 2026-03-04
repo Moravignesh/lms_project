@@ -78,3 +78,39 @@ class PaymentOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class AttendanceRecordInput(BaseModel):
+    student_id: int
+    status: str
+
+
+class AttendanceMarkRequest(BaseModel):
+    course_id: int
+    date: str
+    records: List[AttendanceRecordInput]
+
+
+class AssignmentCreateResponse(BaseModel):
+    id: int
+    course_id: int
+    title: str
+    description: Optional[str]
+    deadline: str
+    file_url: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+
+class SubmissionResponse(BaseModel):
+    id: int
+    assignment_id: int
+    student_id: int
+    file_url: str
+    submitted_at: str
+    grade: Optional[float]
+    remarks: Optional[str]
+
+    class Config:
+        from_attributes = True
